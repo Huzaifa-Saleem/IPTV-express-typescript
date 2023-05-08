@@ -1,12 +1,29 @@
 import { Router } from "express";
-import { createStream, deleteStream, getStream, streamDetails, updateStream } from "../controllers/streams.controller";
-
+import {
+  createStream,
+  deleteStream,
+  getStream,
+  streamDetails,
+  streamsEpisodes,
+  streamsEpisodesSeason,
+  streamsEpisodesSeasonSeries,
+  streamsEpisodesSeasonSeriesGenre,
+  streamsUser,
+  updateStream,
+} from "../controllers/streams.controller";
 
 const router = Router();
 
 /** GET ROUTES */
 router.get("/", getStream);
-router.get("/:id", streamDetails);
+router.get("/:id/episode", streamsEpisodes);
+router.get("/:id/user", streamsUser);
+router.get("/:id/episode/season", streamsEpisodesSeason);
+router.get("/:id/episode/season/series", streamsEpisodesSeasonSeries);
+router.get(
+  "/:id/episode/season/series/genre",
+  streamsEpisodesSeasonSeriesGenre
+);
 
 /** POST ROUTES */
 router.post("/create", createStream);

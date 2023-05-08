@@ -2,6 +2,9 @@ import express from "express";
 import morgan from "morgan";
 import helmet from "helmet";
 import cors from "cors";
+import SwaggerUI from "swagger-ui-express";
+import swaggerJsdoc from "swagger-jsdoc";
+import * as swaggerData from "../iptv.json";
 //
 import * as middlewares from "./middlewares/middlewares";
 import MessageResponse from "./interfaces/MessageResponse";
@@ -25,6 +28,9 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use("/public", express.static("./src/assets"));
+
+// Swagger
+app.use("/use-doc", SwaggerUI.serve, SwaggerUI.setup(swaggerData));
 
 app.get<{}, MessageResponse>("/", (req, res) => {
   res.json({
