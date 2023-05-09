@@ -1,0 +1,1009 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "iptv",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000"
+    },
+    {
+      "url": "http://{{5000}}"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "user"
+    },
+    {
+      "name": "genre"
+    },
+    {
+      "name": "series"
+    },
+    {
+      "name": "season"
+    },
+    {
+      "name": "episodes"
+    },
+    {
+      "name": "stream"
+    }
+  ],
+  "paths": {
+    "/users/register": {
+      "post": {
+        "tags": ["user"],
+        "summary": "register user",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "firstname": "huzaifa",
+                  "lastname": "saleem",
+                  "email": "hzuaifa311@gmail.com",
+                  "password": "12345678"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "tags": ["user"],
+        "summary": "get-all-users",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+
+    "/users/{userId}": {
+      "get": {
+        "tags": ["user"],
+        "summary": "Get user details",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "ID of the user to retrieve",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+
+    "/users/login": {
+      "post": {
+        "tags": ["user"],
+        "summary": "user login",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "email": "hzuaifa311@gmail.com",
+                  "password": "12345678"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/users/{userId}": {
+      "patch": {
+        "tags": ["user"],
+        "summary": "update user",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "ID of the user to retrieve",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "firstname": "abc1"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["user"],
+        "summary": "delete user",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "ID of the user to retrieve",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/users/{userId}/streams": {
+      "get": {
+        "tags": ["user"],
+        "summary": "get all streams of single user",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "ID of the user to retrieve",
+            "required": true,
+            "example": "6454ac38e20f558627f84876",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/users/{userId}/streams/{streamId}": {
+      "get": {
+        "tags": ["user"],
+        "summary": "get-a-stream-of-user-with-stream-id and-id",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "ID of the user to retrieve who's stream is to retrieve.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "streamId",
+            "in": "path",
+            "description": "ID of the stream to retrieve",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/users/{userId}/streams/{streamId}": {
+      "delete": {
+        "tags": ["user"],
+        "summary": "delete user stream",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "ID of the user to retrieve who's stream is to retrieve.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "streamId",
+            "in": "path",
+            "description": "ID of the stream to retrieve",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/streams/{streamId}/episode/season/series": {
+      "get": {
+        "tags": ["user"],
+        "summary": "stream-episodes-season-series",
+        "parameters": [
+          {
+            "name": "streamId",
+            "in": "path",
+            "description": "ID of the stream to retrieve",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/genres": {
+      "get": {
+        "tags": ["genre"],
+        "summary": "get-all-genres",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/genres/create": {
+      "post": {
+        "tags": ["genre"],
+        "summary": "create-genres",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "name": "hello2"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/genres/{genreId}": {
+      "get": {
+        "tags": ["genre"],
+        "summary": "get-genre-details",
+        "parameters": [
+          {
+            "name": "genreId",
+            "in": "path",
+            "description": "ID of the genre to retrieve",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["genre"],
+        "summary": "update-genre",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "name": "hello1"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/genres/{genreId}/series": {
+      "get": {
+        "tags": ["genre"],
+        "summary": "get-genre-series-seasons",
+        "parameters": [
+          {
+            "name": "genreId",
+            "in": "path",
+            "description": "ID of the genre to retrieve",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/genres/{genreId}": {
+      "delete": {
+        "tags": ["genre"],
+        "summary": "delete-genre",
+        "parameters": [
+          {
+            "name": "genreId",
+            "in": "path",
+            "description": "ID of the genre to retrieve",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/series": {
+      "get": {
+        "tags": ["series"],
+        "summary": "get-all-series",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/series/{seriesId}": {
+      "get": {
+        "tags": ["series"],
+        "summary": "get-all-series-episodes",
+        "parameters": [
+          {
+            "name": "seriesId",
+            "in": "path",
+            "description": "ID of the series to retrieve",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["season"],
+        "summary": "update-season",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "name": "The Matrix",
+                  "genre_id": "64549baf3fcdef25ec59965e",
+                  "description": "movie with great action",
+                  "trailer": "https://www.youtube.com/watch?v=9ix7TUGVYIo"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/series/create": {
+      "post": {
+        "tags": ["series"],
+        "summary": "series create",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "name": "The Matrix1",
+                  "genre_id": "64549baf3fcdef25ec59965e",
+                  "description": "movie with great action1",
+                  "trailer": "https://www.youtube.com/watch?v=9ix7TUGVYIo2"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/series/{seriesId}": {
+      "delete": {
+        "tags": ["series"],
+        "summary": "delete series",
+        "parameters": [
+          {
+            "name": "seriesId",
+            "in": "path",
+            "description": "ID of the genre to retrieve",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "6454a0a67df677e178b955a"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/seasons": {
+      "get": {
+        "tags": ["season"],
+        "summary": "get-all-season",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/seasons/{seasonId}": {
+      "get": {
+        "tags": ["season"],
+        "summary": "season-episodes",
+        "parameters": [
+          {
+            "name": "seasonId",
+            "in": "path",
+            "description": "ID of the season to retrieve",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "6454ac4ce20f558627f8487c"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["episodes"],
+        "summary": "delete-episode",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/seasons/create": {
+      "post": {
+        "tags": ["season"],
+        "summary": "season create",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "name": "The Matrix",
+                  "series_id": "64549f76d8f96ec2bbb70141",
+                  "description": "movie with great action1"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/episodes": {
+      "get": {
+        "tags": ["episodes"],
+        "summary": "get-all-episode",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/episodes/{episodeId}": {
+      "get": {
+        "tags": ["episodes"],
+        "summary": "episode details",
+        "parameters": [
+          {
+            "name": "episodeId",
+            "in": "path",
+            "description": "ID of the episode to retrieve",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "6454db70986afff45e05fb1c"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/episodes/{episodeId}/streams": {
+      "get": {
+        "tags": ["episodes"],
+        "summary": "episode-streams",
+        "parameters": [
+          {
+            "name": "episodeId",
+            "in": "path",
+            "description": "ID of the episode to retrieve",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "6454db70986afff45e05fb1c"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/episodes/create": {
+      "post": {
+        "tags": ["episodes"],
+        "summary": "episode create",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "episode7"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "description of episode 1"
+                  },
+                  "image": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "season_id": {
+                    "type": "string",
+                    "example": "6454ac38e20f558627f84876"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/episodes/{episodeId}": {
+      "patch": {
+        "tags": ["episodes"],
+        "summary": "stream-update",
+        "parameters": [
+          {
+            "name": "episodeId",
+            "in": "path",
+            "description": "ID of the episode to retrieve",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "6454db70986afff45e05fb1c"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "episode9"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "description of episode 278"
+                  },
+                  "image": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "season_id": {
+                    "type": "string",
+                    "example": "6454ac38e20f558627f84876"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/streams": {
+      "get": {
+        "tags": ["stream"],
+        "summary": "get-all-stream",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/streams/{streamId}": {
+      "get": {
+        "tags": ["stream"],
+        "summary": "stream-details",
+        "parameters": [
+          {
+            "name": "streamId",
+            "in": "path",
+            "description": "ID of the stream to retrieve",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "6454f8f17f46dd955b60ed60"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/streams/{streamId}/episode": {
+      "get": {
+        "tags": ["stream"],
+        "summary": "stream-user",
+        "parameters": [
+          {
+            "name": "streamId",
+            "in": "path",
+            "description": "ID of the stream to retrieve",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "6454f8f17f46dd955b60ed60"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/streams/{streamId}/episode/season": {
+      "get": {
+        "tags": ["stream"],
+        "summary": "stream-episode-season Copy",
+        "parameters": [
+          {
+            "name": "streamId",
+            "in": "path",
+            "description": "ID of the stream to retrieve",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "6454f8f17f46dd955b60ed60"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/streams/{streamId}/episode/season/series/genre": {
+      "get": {
+        "tags": ["stream"],
+        "summary": "stream-episodes-season-series-genre",
+        "parameters": [
+          {
+            "name": "streamId",
+            "in": "path",
+            "description": "ID of the stream to retrieve",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "6454f8f17f46dd955b60ed60"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/streams/create": {
+      "post": {
+        "tags": ["stream"],
+        "summary": "stream-create",
+        "parameters": [
+          {
+            "name": "streamId",
+            "in": "path",
+            "description": "ID of the stream to retrieve",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "6454f8f17f46dd955b60ed60"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "user_id": "64536396d05f4ee511d8e44a",
+                  "episode_id": "6454db70986afff45e05fb1c"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/streams/{streamId}": {
+      "delete": {
+        "tags": ["stream"],
+        "summary": "delete-stream",
+        "parameters": [
+          {
+            "name": "streamId",
+            "in": "path",
+            "description": "ID of the stream to retrieve",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "6454f8f17f46dd955b60ed60"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    }
+  }
+}

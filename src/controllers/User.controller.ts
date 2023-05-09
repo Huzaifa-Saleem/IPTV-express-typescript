@@ -5,7 +5,23 @@ import ErrorHandler from "../middlewares/ErrorHandler";
 import jwt from "jsonwebtoken";
 import { JWT_EXPIRE, JWT_SECRET } from "../config/Constants.env";
 
-/** GET: USER */
+/**
+ * @swagger
+ * /users:
+ *   get:
+ *     tag: User
+ *     summary: Get all users
+ *     description: Returns a list of all users
+ *     tags:
+ *       - user
+ *     responses:
+ *       '200':
+ *         description: A list of users
+ *         content:
+ *           application/json:
+ *             schema:
+ *                 type: array
+ */
 export const getUser = async (
   req: Request,
   res: Response,
@@ -19,6 +35,30 @@ export const getUser = async (
   }
 };
 
+/**
+ * @swagger
+ * /users/{id}:
+ *   get:
+ *     tag: User
+ *     summary: Get user details
+ *     description: Returns a object of the user
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         example: 64536396d05f4ee511d8e44a
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the user to retrieve.
+ *     tags:
+ *       - user
+ *     responses:
+ *       '200':
+ *         description: A object of user
+ *         content:
+ *           application/json:
+ *               type: object
+ */
 /** GET: USER DETAILS */
 export const userDetails = async (
   req: Request,
@@ -44,6 +84,38 @@ export const userDetails = async (
   }
 };
 
+/**
+ * @swagger
+ * /register:
+ *   post:
+ *     summary: Register a new user
+ *     description: Register a new user with the provided details
+ *     tags:
+ *       - user
+ *     requestBody:
+ *       description: User object
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/User'
+ *     responses:
+ *       201:
+ *         description: User created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 user:
+ *                   $ref: '#/components/schemas/User'
+ *                 token:
+ *                   type: string
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ */
 /** POST: REGISTER USER */
 export const registerUser = async (
   req: Request,
@@ -125,6 +197,30 @@ export const updateUser = async (
   }
 };
 
+/**
+ * @swagger
+ * /users/{id}:
+ *   delete:
+ *     tag: User
+ *     summary: Get user details
+ *     description: Returns a object of the user
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         example: 6458bd7696aeec9d9f0beafa
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the user to retrieve.
+ *     tags:
+ *       - user
+ *     responses:
+ *       '200':
+ *         description: A object of user
+ *         content:
+ *           application/json:
+ *               type: object
+ */
 /** DELETE: USER */
 export const deleteUser = async (
   req: Request,
@@ -133,6 +229,17 @@ export const deleteUser = async (
 ) => {
   try {
     const id = req.params.id;
+
+    await User.findById(id)
+      .then((user) => {
+        if (!user) {
+          return res.status(404).json({ message: "User doesn't exist...!" });
+        }
+      })
+      .catch(() => {
+        return res.status(404).json({ message: "User doesn't exist...!" });
+      });
+
     const deleted = await User.findByIdAndDelete(id);
 
     res.status(200).json({ message: "Deleted Successfully...!" });
@@ -141,6 +248,30 @@ export const deleteUser = async (
   }
 };
 
+/**
+ * @swagger
+ * /users/{id}/streams:
+ *   get:
+ *     tag: User
+ *     summary: Get user streams
+ *     description: Returns a array of the user streams
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         example: 64536396d05f4ee511d8e44a
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the user to retrieve.
+ *     tags:
+ *       - user
+ *     responses:
+ *       '200':
+ *         description: A object of user
+ *         content:
+ *           application/json:
+ *               type: array
+ */
 /** GET: USER STREAMS */
 export const userStreams = async (
   req: Request,
@@ -170,6 +301,37 @@ export const userStreams = async (
   }
 };
 
+/**
+ * @swagger
+ * /users/{id}/streams/{streamId}:
+ *   get:
+ *     tag: User
+ *     summary: Get user details
+ *     description: Returns a object of the user
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         example: 64536396d05f4ee511d8e44a
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the user to retrieve the stream.
+ *       - in: path
+ *         name: streamId
+ *         example: 6458904b6e4d0c6eba4c7556
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the stream to retrieve.
+ *     tags:
+ *       - user
+ *     responses:
+ *       '200':
+ *         description: A object of user
+ *         content:
+ *           application/json:
+ *               type: object
+ */
 /** GET: USER STREAM WITH STREAM AND USER ID*/
 export const userStream = async (
   req: Request,
@@ -187,11 +349,12 @@ export const userStream = async (
 
     await Stream.findById(streamId)
       .then((stream) => {
+        console.log(stream);
         if (!stream)
           return res
             .status(404)
             .json({ message: "Cannot find any Stream...!" });
-        if (stream?.user_id !== id)
+        if (stream!.user_id != id)
           throw new ErrorHandler("User doesn't have this stream...!", 404);
 
         return res.status(200).json({ data: stream });
@@ -204,6 +367,37 @@ export const userStream = async (
   }
 };
 
+/**
+ * @swagger
+ * /users/{id}/streams/{streamId}:
+ *   delete:
+ *     tag: User
+ *     summary: Get user details
+ *     description: Returns a object of the user
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         example: 64536396d05f4ee511d8e44a
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the user to retrieve.
+ *       - in: path
+ *         name: streamId
+ *         example: 6458b8e7450f10118ef4d7a6
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the user to retrieve.
+ *     tags:
+ *       - user
+ *     responses:
+ *       '200':
+ *         description: A object of user
+ *         content:
+ *           application/json:
+ *               type: object
+ */
 /** DELETE: USER STREAM WITH STREAM AND USER ID*/
 export const deleteUserStream = async (
   req: Request,

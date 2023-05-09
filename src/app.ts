@@ -29,8 +29,47 @@ app.use(cors());
 app.use(express.json());
 app.use("/public", express.static("./src/assets"));
 
-// Swagger
-app.use("/use-doc", SwaggerUI.serve, SwaggerUI.setup(swaggerData));
+// // Swagger
+const swaggerOptions = {
+  definition: {
+    openApi: "3.0.0",
+    info: {
+      title: "IPTV",
+      version: "1.0.0",
+      description: "iptv swagger documentation...",
+    },
+    servers: [
+      {
+        url: "http://localhost:5000",
+      },
+    ],
+  },
+  apis: ["./src/controllers/User.controller.ts"],
+};
+
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
+
+app.use("/api-docs", SwaggerUI.serve, SwaggerUI.setup(swaggerSpec));
+// const swaggerOptions = {
+//   definition: {
+//     openApi: "3.0.0",
+//     info: {
+//       title: "IPTV",
+//       version: "1.0.0",
+//       description: "iptv swagger documentation...",
+//     },
+//     servers: [
+//       {
+//         url: "http://localhost:5000",
+//       },
+//     ],
+//   },
+//   apis: ["./controllers/User.controller.ts"],
+// };
+
+// const jsDoc = swaggerJsdoc(swaggerOptions);
+// // app.use("/use-doc", SwaggerUI.serve, SwaggerUI.setup(swaggerData));
+// app.use("/use-doc", SwaggerUI.serve, SwaggerUI.setup(jsDoc));
 
 app.get<{}, MessageResponse>("/", (req, res) => {
   res.json({
