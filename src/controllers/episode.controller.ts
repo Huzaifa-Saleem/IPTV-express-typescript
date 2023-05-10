@@ -3,6 +3,23 @@ import { Genre, Episode, EpisodeSchemaType, Season, Stream } from "../models";
 import ErrorHandler from "../middlewares/ErrorHandler";
 
 /** GET: EPISODES */
+/**
+ * @swagger
+ * /episodes:
+ *   get:
+ *     tag: episode
+ *     summary: Get all episodes
+ *     description: Returns a list of all episodes
+ *     tags:
+ *       - episode
+ *     responses:
+ *       '200':
+ *         description: A list of episodes
+ *         content:
+ *           application/json:
+ *             schema:
+ *                 type: array
+ */
 export const getEpisode = async (
   req: Request,
   res: Response,
@@ -25,6 +42,29 @@ export const getEpisode = async (
 };
 
 /** GET: EPISODES DETAILS */
+/**
+ * @swagger
+ * /episodes/{id}:
+ *   get:
+ *     tag: User
+ *     summary: Get episode details
+ *     description: Returns a object of the episode
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the episode to retrieve.
+ *     tags:
+ *       - episode
+ *     responses:
+ *       '200':
+ *         description: A object of episode
+ *         content:
+ *           application/json:
+ *               type: object
+ */
 export const episodeDetails = async (
   req: Request,
   res: Response,
@@ -52,7 +92,61 @@ export const episodeDetails = async (
   }
 };
 
-/** POST: CREATE EPISODES */
+/**
+ * @swagger
+ * /episodes/create:
+ *   post:
+ *     tags:
+ *       - episode
+ *     summary: Create a new episode
+ *     consumes:
+ *       - multipart/form-data
+ *     parameters:
+ *       - in: formData
+ *         name: name
+ *         type: string
+ *         required: true
+ *         description: The name of the episode.
+ *       - in: formData
+ *         name: description
+ *         type: string
+ *         required: true
+ *         description: The description of the episode.
+ *       - in: formData
+ *         name: season_id
+ *         type: string
+ *         required: true
+ *         description: The ID of the season that this episode belongs to.
+ *       - in: formData
+ *         name: image
+ *         type: file
+ *         required: true
+ *         description: The image file for the episode.
+ *     requestBody:
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               season_id:
+ *                 type: string
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       '201':
+ *         description: Episode created successfully.
+ *         content:
+ *           application/json: {}
+ *       '400':
+ *         description: Bad Request. The request is invalid or malformed.
+ *       '500':
+ *         description: Internal Server Error. The server encountered an unexpected condition that prevented it from fulfilling the request.
+ */
 export const createEpisode = async (
   req: Request,
   res: Response,
@@ -88,6 +182,60 @@ export const createEpisode = async (
   }
 };
 
+/**
+ * @swagger
+ * /episodes/{episodeId}:
+ *   patch:
+ *     tags:
+ *       - episode
+ *     summary: Create a new episode
+ *     consumes:
+ *       - multipart/form-data
+ *     parameters:
+ *       - in: path
+ *         name: episodeId
+ *         type: string
+ *       - in: formData
+ *         name: name
+ *         type: string
+ *         description: The name of the episode.
+ *       - in: formData
+ *         name: description
+ *         type: string
+ *         description: The description of the episode.
+ *       - in: formData
+ *         name: season_id
+ *         type: string
+ *         description: The ID of the season that this episode belongs to.
+ *       - in: formData
+ *         name: image
+ *         type: file
+ *         description: The image file for the episode.
+ *     requestBody:
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               season_id:
+ *                 type: string
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       '201':
+ *         description: Episode created successfully.
+ *         content:
+ *           application/json: {}
+ *       '400':
+ *         description: Bad Request. The request is invalid or malformed.
+ *       '500':
+ *         description: Internal Server Error. The server encountered an unexpected condition that prevented it from fulfilling the request.
+ */
 /** PATCH: UPDATE EPISODES */
 export const updateEpisode = async (
   req: Request,
@@ -140,6 +288,29 @@ export const updateEpisode = async (
 };
 
 /** DELETE: EPISODES */
+/**
+ * @swagger
+ * /episodes/{id}:
+ *   delete:
+ *     tag: User
+ *     summary: delete episode details
+ *     description: Returns a object of the episode
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the episode to retrieve.
+ *     tags:
+ *       - episode
+ *     responses:
+ *       '200':
+ *         description: A object of episode
+ *         content:
+ *           application/json:
+ *               type: object
+ */
 export const deleteEpisode = async (
   req: Request,
   res: Response,
@@ -161,7 +332,30 @@ export const deleteEpisode = async (
   }
 };
 
-/** GET: EPISODES DETAILS */
+/** GET: EPISODES STREAM */
+/**
+ * @swagger
+ * /episodes/{id}/streams:
+ *   get:
+ *     tag: User
+ *     summary: Get episode streams
+ *     description: Returns a object of the streams
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the episode to retrieve.
+ *     tags:
+ *       - episode
+ *     responses:
+ *       '200':
+ *         description: A object of episode
+ *         content:
+ *           application/json:
+ *               type: object
+ */
 export const episodeStreams = async (
   req: Request,
   res: Response,
@@ -174,6 +368,11 @@ export const episodeStreams = async (
         if (episode) {
           Stream.find({ episode_id: episode._id })
             .then((stream) => {
+              if (!stream || stream.length < 1) {
+                return res
+                  .status(404)
+                  .json({ message: "this Episode doesn't have any stream" });
+              }
               return res.status(200).json({ response: "OK", data: stream });
             })
             .catch(() => {

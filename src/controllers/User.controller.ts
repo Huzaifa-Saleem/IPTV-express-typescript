@@ -86,35 +86,45 @@ export const userDetails = async (
 
 /**
  * @swagger
- * /register:
+ * /users/register:
  *   post:
  *     summary: Register a new user
- *     description: Register a new user with the provided details
+ *     parameters:
+ *       - in: formData
+ *         name: firstname
+ *       - in: formData
+ *         name: lastname
+ *       - in: formData
+ *         name: email
+ *       - in: formData
+ *         name: password
  *     tags:
  *       - user
- *     requestBody:
- *       description: User object
+ *     requestBodies:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/User'
+ *             type: object
+ *             required:
+ *               - firstname
+ *               - lastname
+ *               - email
+ *               - password
+ *             example:
+ *               firstname: John
+ *               lastname: Doe
+ *               email: johndoe@example.com
+ *               password: password123
  *     responses:
- *       201:
- *         description: User created successfully
+ *       '201':
+ *         description: User registered successfully
  *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 user:
- *                   $ref: '#/components/schemas/User'
- *                 token:
- *                   type: string
- *       400:
- *         description: Bad request
- *       500:
- *         description: Internal server error
+ *           application/json: {}
+ *       '400':
+ *         description: Bad Request. The request is invalid or malformed.
+ *       '500':
+ *         description: Internal Server Error. The server encountered an unexpected condition that prevented it from fulfilling the request.
  */
 /** POST: REGISTER USER */
 export const registerUser = async (
@@ -145,6 +155,48 @@ export const registerUser = async (
   }
 };
 
+/**
+ * @swagger
+ * /users/login:
+ *   post:
+ *     tags:
+ *       - user
+ *     summary: Login user
+ *     parameters:
+ *       - in: formData
+ *         name: email
+ *       - in: formData
+ *         name: password
+ *
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/loginSchema'
+ *     responses:
+ *       '200':
+ *         description: User logged in successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 user:
+ *                   type: object
+ *                 token:
+ *                   type: string
+ *       '400':
+ *         description: Bad Request. The request is invalid or malformed.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: Error message
+ *                   example: Invalid email or password
+ */
 /** POST: LOGIN USER */
 export const loginUser = async (
   req: Request,
@@ -153,6 +205,7 @@ export const loginUser = async (
 ) => {
   try {
     const data = req.body;
+
     const user = await User.findOne({ email: data.email });
     if (!user) throw new ErrorHandler("Invalid email and password...!", 401);
 
@@ -167,6 +220,50 @@ export const loginUser = async (
   }
 };
 
+/**
+ * @swagger
+ * /users/{id}:
+ *   patch:
+ *     summary: Register a new user
+ *     parameters:
+ *       - in: formData
+ *         name: firstname
+ *       - in: formData
+ *         name: lastname
+ *       - in: formData
+ *         name: email
+ *       - in: formData
+ *         name: password
+ *       - in: path
+ *         name: id
+ *     tags:
+ *       - user
+ *     requestBodies:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - firstname
+ *               - lastname
+ *               - email
+ *               - password
+ *             example:
+ *               firstname: John
+ *               lastname: Doe
+ *               email: johndoe@example.com
+ *               password: password123
+ *     responses:
+ *       '201':
+ *         description: User registered successfully
+ *         content:
+ *           application/json: {}
+ *       '400':
+ *         description: Bad Request. The request is invalid or malformed.
+ *       '500':
+ *         description: Internal Server Error. The server encountered an unexpected condition that prevented it from fulfilling the request.
+ */
 /** PATCH: UPDATE USER */
 export const updateUser = async (
   req: Request,

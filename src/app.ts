@@ -27,16 +27,32 @@ app.use(morgan("dev"));
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use("/public", express.static("./src/assets"));
 
 // // Swagger
 const swaggerOptions = {
   definition: {
-    openApi: "3.0.0",
+    openApi: "3.0.1",
     info: {
       title: "IPTV",
-      version: "1.0.0",
+      version: "1.3.0",
       description: "iptv swagger documentation...",
+    },
+    components: {
+      schemas: {
+        User: {
+          type: "object",
+          properties: {
+            email: {
+              type: "string",
+            },
+            password: {
+              type: "string",
+            },
+          },
+        },
+      },
     },
     servers: [
       {
@@ -44,32 +60,14 @@ const swaggerOptions = {
       },
     ],
   },
-  apis: ["./src/controllers/User.controller.ts"],
+  schemas: "http",
+  apis: ["./src/controllers/*"],
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
 app.use("/api-docs", SwaggerUI.serve, SwaggerUI.setup(swaggerSpec));
-// const swaggerOptions = {
-//   definition: {
-//     openApi: "3.0.0",
-//     info: {
-//       title: "IPTV",
-//       version: "1.0.0",
-//       description: "iptv swagger documentation...",
-//     },
-//     servers: [
-//       {
-//         url: "http://localhost:5000",
-//       },
-//     ],
-//   },
-//   apis: ["./controllers/User.controller.ts"],
-// };
-
-// const jsDoc = swaggerJsdoc(swaggerOptions);
-// // app.use("/use-doc", SwaggerUI.serve, SwaggerUI.setup(swaggerData));
-// app.use("/use-doc", SwaggerUI.serve, SwaggerUI.setup(jsDoc));
+// app.use("/use-doc", SwaggerUI.serve, SwaggerUI.setup(swaggerData));
 
 app.get<{}, MessageResponse>("/", (req, res) => {
   res.json({
