@@ -3,6 +3,23 @@ import { Genre, Season, Series } from "../models";
 import ErrorHandler from "../middlewares/ErrorHandler";
 
 /** GET: GENRE */
+/**
+ * @swagger
+ * /genres:
+ *   get:
+ *     tag: genre
+ *     summary: Get all genres
+ *     description: Returns a list of all genres
+ *     tags:
+ *       - genre
+ *     responses:
+ *       '200':
+ *         description: A list of genres
+ *         content:
+ *           application/json:
+ *             schema:
+ *                 type: array
+ */
 export const getGenre = async (
   req: Request,
   res: Response,
@@ -17,6 +34,29 @@ export const getGenre = async (
 };
 
 /** GET: GENRE DETAILS */
+/**
+ * @swagger
+ * /genres/{id}:
+ *   get:
+ *     tag: User
+ *     summary: Get genre details
+ *     description: Returns a object of the genre
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the genre to retrieve.
+ *     tags:
+ *       - genre
+ *     responses:
+ *       '200':
+ *         description: A object of genre
+ *         content:
+ *           application/json:
+ *               type: object
+ */
 export const genreDetails = async (
   req: Request,
   res: Response,

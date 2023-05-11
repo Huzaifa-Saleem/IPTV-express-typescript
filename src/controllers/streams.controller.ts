@@ -3,6 +3,23 @@ import { Episode, Genre, Season, Series, Stream, User } from "../models";
 import ErrorHandler from "../middlewares/ErrorHandler";
 
 /** GET: STREAMS */
+/**
+ * @swagger
+ * /streams:
+ *   get:
+ *     tag: stream
+ *     summary: Get all streams
+ *     description: Returns a list of all streams
+ *     tags:
+ *       - stream
+ *     responses:
+ *       '200':
+ *         description: A list of streams
+ *         content:
+ *           application/json:
+ *             schema:
+ *                 type: array
+ */
 export const getStream = async (
   req: Request,
   res: Response,

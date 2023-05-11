@@ -3,6 +3,23 @@ import { Series, Season, Genre, Episode } from "../models";
 import ErrorHandler from "../middlewares/ErrorHandler";
 
 /** GET: SEASONS */
+/**
+ * @swagger
+ * /seasons:
+ *   get:
+ *     tag: season
+ *     summary: Get all seasons
+ *     description: Returns a list of all seasons
+ *     tags:
+ *       - season
+ *     responses:
+ *       '200':
+ *         description: A list of seasons
+ *         content:
+ *           application/json:
+ *             schema:
+ *                 type: array
+ */
 export const getSeason = async (
   req: Request,
   res: Response,

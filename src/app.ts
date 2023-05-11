@@ -4,7 +4,6 @@ import helmet from "helmet";
 import cors from "cors";
 import SwaggerUI from "swagger-ui-express";
 import swaggerJsdoc from "swagger-jsdoc";
-import * as swaggerData from "../iptv.json";
 //
 import * as middlewares from "./middlewares/middlewares";
 import MessageResponse from "./interfaces/MessageResponse";
@@ -67,7 +66,7 @@ const swaggerOptions = {
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
 app.use("/api-docs", SwaggerUI.serve, SwaggerUI.setup(swaggerSpec));
-// app.use("/use-doc", SwaggerUI.serve, SwaggerUI.setup(swaggerData));
+// app.use("/api-doc", SwaggerUI.serve, SwaggerUI.setup(swaggerData));
 
 app.get<{}, MessageResponse>("/", (req, res) => {
   res.json({

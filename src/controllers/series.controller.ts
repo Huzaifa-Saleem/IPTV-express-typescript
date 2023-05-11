@@ -3,6 +3,23 @@ import { Episode, Genre, Season, Series } from "../models";
 import ErrorHandler from "../middlewares/ErrorHandler";
 
 /** GET: SERIES */
+/**
+ * @swagger
+ * /series:
+ *   get:
+ *     tag: series
+ *     summary: Get all series
+ *     description: Returns a list of all series
+ *     tags:
+ *       - series
+ *     responses:
+ *       '200':
+ *         description: A list of series
+ *         content:
+ *           application/json:
+ *             schema:
+ *                 type: array
+ */
 export const getSeries = async (
   req: Request,
   res: Response,
@@ -176,11 +193,9 @@ export const getSeriesEpisodes = async (
                     .json({ response: "OK", data: episodes });
                 })
                 .catch(() => {
-                  return res
-                    .status(404)
-                    .json({
-                      message: "this season doesn't have any episodes...!",
-                    });
+                  return res.status(404).json({
+                    message: "this season doesn't have any episodes...!",
+                  });
                 });
             })
             .catch(() =>
