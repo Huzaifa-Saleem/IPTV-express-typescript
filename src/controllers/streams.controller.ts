@@ -41,7 +41,7 @@ export const streamDetails = async (
 ) => {
   try {
     const id = req.params.id;
-    await Stream.findOne({ _id: id })
+    await Stream.findById({ _id: id })
       .populate(["episode_id", "user_id"])
       .exec()
       .then((stream) => {

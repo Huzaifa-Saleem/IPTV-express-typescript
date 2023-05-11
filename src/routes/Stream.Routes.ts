@@ -16,6 +16,7 @@ const router = Router();
 
 /** GET ROUTES */
 router.get("/", getStream);
+router.get("/:id", streamDetails);
 router.get("/:id/episode", streamsEpisodes);
 router.get("/:id/user", streamsUser);
 router.get("/:id/episode/season", streamsEpisodesSeason);

@@ -27,7 +27,7 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use("/public", express.static("./src/assets"));
+app.use("/public", express.static("./src/assets/images"));
 
 // // Swagger
 const swaggerOptions = {

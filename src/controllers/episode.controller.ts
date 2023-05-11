@@ -318,15 +318,12 @@ export const deleteEpisode = async (
 ) => {
   try {
     const id = req.params.id;
-    await Episode.findByIdAndDelete(id)
-      .then((episode) => {
-        if (episode)
-          res.status(200).json({ message: "Deleted Successfully...!" });
-        else res.status(400).json({ message: "Episode Doesn't exist...!" });
-      })
-      .catch((err) => {
-        throw new ErrorHandler("Episode Doesn't exist...!", 400);
-      });
+    const episode = await Episode.findByIdAndDelete(id);
+    if (episode) {
+      res.status(200).json({ message: "Deleted Successfully...!" });
+    } else {
+      throw new ErrorHandler("Episode Doesn't exist...!", 400);
+    }
   } catch (error) {
     next(error);
   }
