@@ -116,7 +116,7 @@ export const userDetails = async (req: Request, res: Response) => {
 /** POST: REGISTER USER */
 export const registerUser = async (req: Request, res: Response) => {
   try {
-    const user = UserServices.registerUser(req.body);
+    const user = await UserServices.registerUser(req.body);
     httpResponse.CREATED(res, user, "User Register Successfully...!");
   } catch (error) {
     httpResponse.BAD_REQUEST(res, {}, String(error));
