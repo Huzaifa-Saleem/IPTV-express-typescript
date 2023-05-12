@@ -4,6 +4,8 @@ import { Stream, User, UserSchemaType } from "../models";
 import ErrorHandler from "../middlewares/ErrorHandler";
 import jwt from "jsonwebtoken";
 import { JWT_EXPIRE, JWT_SECRET } from "../config/Constants.env";
+import { UserServices } from "../services";
+import { httpResponse } from "../util/httpRespoonse";
 
 /**
  * @swagger
@@ -22,16 +24,12 @@ import { JWT_EXPIRE, JWT_SECRET } from "../config/Constants.env";
  *             schema:
  *                 type: array
  */
-export const getUser = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const getUser = async (req: Request, res: Response) => {
   try {
-    const users = await User.find();
-    res.status(200).json({ users });
+    const user = await UserServices.getAll();
+    httpResponse.SUCCESS(res, user, "Users Retrieve Successfully...!");
   } catch (error) {
-    next(error);
+    httpResponse.INTERNAL_SERVER_ERROR(res, {}, "Internel Server Error...!");
   }
 };
 
@@ -60,27 +58,16 @@ export const getUser = async (
  *               type: object
  */
 /** GET: USER DETAILS */
-export const userDetails = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const userDetails = async (req: Request, res: Response) => {
   try {
-    const id = req.params.id;
-    await User.findOne({ _id: id })
-      .then((user) => {
-        if (user) {
-          const { password, ...data } = user.toJSON();
-          res.status(200).json({ data });
-        } else {
-          res.status(404).json({ message: "No User existed with this id...!" });
-        }
-      })
-      .catch(() => {
-        throw new ErrorHandler("No User existed with this id...!", 404);
-      });
+    const user = await UserServices.getUserDetails(req.params.id);
+    httpResponse.SUCCESS(
+      res,
+      { user },
+      "User Details Retrieve Succesfully...!"
+    );
   } catch (error) {
-    next(error);
+    httpResponse.BAD_REQUEST(res, "User Doesn't Exist...!");
   }
 };
 
@@ -127,31 +114,12 @@ export const userDetails = async (
  *         description: Internal Server Error. The server encountered an unexpected condition that prevented it from fulfilling the request.
  */
 /** POST: REGISTER USER */
-export const registerUser = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const registerUser = async (req: Request, res: Response) => {
   try {
-    const data: UserSchemaType = req.body;
-    const hashedPass = passwordHash.generate(data.password);
-
-    const userExit = await User.find({ email: data.email });
-    if (userExit.length > 0)
-      throw new ErrorHandler("User already exist...!", 400);
-
-    await User.create({
-      firstname: data.firstname,
-      lastname: data.lastname,
-      email: data.email,
-      password: hashedPass,
-    }).then((user) => {
-      const { password, ...tokenData } = data;
-      const token = jwt.sign(tokenData, JWT_SECRET, { expiresIn: JWT_EXPIRE });
-      res.status(201).json({ user, token });
-    });
+    const user = UserServices.registerUser(req.body);
+    httpResponse.CREATED(res, user, "User Register Successfully...!");
   } catch (error) {
-    next(error);
+    httpResponse.BAD_REQUEST(res, {}, String(error));
   }
 };
 
@@ -198,25 +166,12 @@ export const registerUser = async (
  *                   example: Invalid email or password
  */
 /** POST: LOGIN USER */
-export const loginUser = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const loginUser = async (req: Request, res: Response) => {
   try {
-    const data = req.body;
-
-    const user = await User.findOne({ email: data.email });
-    if (!user) throw new ErrorHandler("Invalid email and password...!", 401);
-
-    const { password, ...restData } = user.toJSON();
-    const isMatched: boolean = passwordHash.verify(data.password, password);
-    if (!isMatched)
-      throw new ErrorHandler("Invalid email and password...!", 401);
-    const token = jwt.sign(restData, JWT_SECRET, { expiresIn: JWT_EXPIRE });
-    res.status(200).json({ user: restData, token });
-  } catch (error) {
-    next(error);
+    const user = await UserServices.loginUser(req.body);
+    httpResponse.SUCCESS(res, user, "Logged In Succesfully...!");
+  } catch (error: any) {
+    httpResponse.BAD_REQUEST(res, error);
   }
 };
 
@@ -265,32 +220,12 @@ export const loginUser = async (
  *         description: Internal Server Error. The server encountered an unexpected condition that prevented it from fulfilling the request.
  */
 /** PATCH: UPDATE USER */
-export const updateUser = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const updateUser = async (req: Request, res: Response) => {
   try {
-    const data: any = req.body;
-    const { id } = req.params;
-
-    const userExit = await User.findById(id);
-    if (!userExit) throw new ErrorHandler("User doesn't exist...!", 400);
-
-    await User.findByIdAndUpdate(id, data, { new: true })
-      .then((user) => {
-        if (user) {
-          const { password, ...restData } = user.toJSON();
-          res
-            .status(201)
-            .json({ restData, message: "User Updated Succesfully...!" });
-        }
-      })
-      .catch(() => {
-        throw new ErrorHandler("User doesn't exist...!", 400);
-      });
+    const updatedUser = await UserServices.updateUser(req.body, req.params.id);
+    httpResponse.SUCCESS(res, { updatedUser }, "User Updated Successfully...!");
   } catch (error) {
-    next(error);
+    httpResponse.NOT_FOUND(res, {}, String(error));
   }
 };
 
